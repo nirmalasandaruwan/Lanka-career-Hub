@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>(function(){var t=localStorage.getItem('lch_theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+  <title>Login — Lanka Career Hub</title>
+  <link rel="icon" href="/assets/logo.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+  <div class="animated-bg">
+    <div class="orb-wrap"><div class="orb orb-1"></div></div>
+    <div class="orb-wrap"><div class="orb orb-2"></div></div>
+    <div class="orb-wrap"><div class="orb orb-3"></div></div>
+    <canvas id="particle-canvas"></canvas>
+  </div>
+  <div class="network-bg"></div>
+
+  <nav class="navbar scrolled">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/assets/logo.png" alt="Lanka Career Hub" class="w-10 h-10 rounded-full">
+        <span class="font-display font-bold text-lg text-white hidden sm:block">Lanka Career Hub</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle day/night mode" title="Day / Night mode">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-icons"><span class="icon-sun">☀️</span><span class="icon-moon">🌙</span></span>
+            <span class="theme-toggle-thumb"></span>
+          </span>
+        </button>
+        <a href="/" class="nav-link">← Back to Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="relative z-10 min-h-screen flex items-center justify-center px-4 py-32">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8 fade-up">
+        <img src="/assets/logo.png" alt="Logo" class="w-16 h-16 rounded-full mx-auto mb-4">
+        <h1 class="text-2xl font-display font-bold text-white" id="form-title">Welcome Back</h1>
+        <p class="text-slate-400 mt-2" id="form-subtitle">Login to your Lanka Career Hub account</p>
+      </div>
+
+      <div class="glass-card p-8 fade-up stagger-1">
+        <div id="auth-error" class="hidden bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-lg mb-4"></div>
+        <div id="auth-success" class="hidden bg-green-500/10 border border-green-500/30 text-green-400 text-sm p-3 rounded-lg mb-4"></div>
+
+        <form id="auth-form" class="space-y-4">
+          <div id="name-field" class="hidden">
+            <label class="block text-sm text-slate-400 mb-1">Full Name</label>
+            <input type="text" id="name" class="auth-input" placeholder="Your full name">
+          </div>
+          <div>
+            <label class="block text-sm text-slate-400 mb-1">Email Address</label>
+            <input type="email" id="email" class="auth-input" placeholder="you@email.com" required>
+          </div>
+          <div>
+            <label class="block text-sm text-slate-400 mb-1">Password</label>
+            <input type="password" id="password" class="auth-input" placeholder="••••••••" required minlength="6">
+          </div>
+          <button type="submit" class="btn-gold w-full" id="submit-btn">Login</button>
+        </form>
+
+        <p class="text-center text-sm text-slate-400 mt-6">
+          <span id="toggle-text">Don't have an account?</span>
+          <button id="toggle-mode" class="text-gold font-semibold hover:underline ml-1">Sign Up</button>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/app.js"></script>
+  <button type="button" id="theme-toggle-float" class="theme-toggle-floating" data-theme-toggle aria-label="Toggle day/night mode" title="Day / Night mode">☀️</button>
+  <script>
+    let isRegister = new URLSearchParams(window.location.search).has('register');
+
+    function updateForm() {
+      const title = document.getElementById('form-title');
+      const subtitle = document.getElementById('form-subtitle');
+      const nameField = document.getElementById('name-field');
+      const submitBtn = document.getElementById('submit-btn');
+      const toggleText = document.getElementById('toggle-text');
+      const toggleBtn = document.getElementById('toggle-mode');
+
+      if (isRegister) {
+        title.textContent = 'Create Account';
+        subtitle.textContent = 'Join Lanka Career Hub for free';
+        nameField.classList.remove('hidden');
+        submitBtn.textContent = 'Create Account';
+        toggleText.textContent = 'Already have an account?';
+        toggleBtn.textContent = 'Login';
+      } else {
+        title.textContent = 'Welcome Back';
+        subtitle.textContent = 'Login to your Lanka Career Hub account';
+        nameField.classList.add('hidden');
+        submitBtn.textContent = 'Login';
+        toggleText.textContent = "Don't have an account?";
+        toggleBtn.textContent = 'Sign Up';
+      }
+    }
+
+    document.getElementById('toggle-mode').addEventListener('click', () => {
+      isRegister = !isRegister;
+      updateForm();
+      document.getElementById('auth-error').classList.add('hidden');
+    });
+
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorEl = document.getElementById('auth-error');
+      const successEl = document.getElementById('auth-success');
+      errorEl.classList.add('hidden');
+      successEl.classList.add('hidden');
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const name = document.getElementById('name').value;
+
+      const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
+      const body = isRegister ? { email, password, name } : { email, password };
+
+      if (isRegister && !name) {
+        errorEl.textContent = 'Please enter your name';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errorEl.textContent = data.error || 'Something went wrong';
+          errorEl.classList.remove('hidden');
+          return;
+        }
+
+        setAuth(data.token, data.user);
+        successEl.textContent = isRegister ? 'Account created! Redirecting...' : 'Login successful! Redirecting...';
+        successEl.classList.remove('hidden');
+        setTimeout(() => window.location.href = '/', 1000);
+      } catch {
+        errorEl.textContent = 'Network error. Please try again.';
+        errorEl.classList.remove('hidden');
+      }
+    });
+
+    if (getToken()) window.location.href = '/';
+    updateForm();
+  </script>
+</body>
+</html>

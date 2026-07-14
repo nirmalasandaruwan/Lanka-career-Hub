@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>(function(){var t=localStorage.getItem('lch_theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+  <title>Lanka Career Hub — Job Vacancies & Opportunities in Sri Lanka</title>
+  <meta name="description" content="Your Gateway to the Newest Job Vacancies & Opportunities in Sri Lanka. Find jobs across all 25 districts.">
+  <link rel="icon" href="/assets/logo.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/animations.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { DEFAULT: '#0a1628', light: '#132744', mid: '#1a3358' },
+            gold: { DEFAULT: '#d4a017', light: '#f0c040' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="animated-bg">
+    <div class="orb-wrap"><div class="orb orb-1"></div></div>
+    <div class="orb-wrap"><div class="orb orb-2"></div></div>
+    <div class="orb-wrap"><div class="orb orb-3"></div></div>
+    <canvas id="particle-canvas"></canvas>
+  </div>
+  <div class="network-bg"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/assets/logo.png" alt="Lanka Career Hub" class="w-10 h-10 rounded-full">
+        <span class="font-display font-bold text-lg text-white hidden sm:block">Lanka Career Hub</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="/" class="nav-link active">Home</a>
+        <a href="/jobs.html" class="nav-link">All Vacancies</a>
+        <a href="/contact.html" class="nav-link">Contact Us</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" class="theme-toggle hidden md:block" data-theme-toggle aria-label="Toggle day/night mode" title="Day / Night mode">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-icons"><span class="icon-sun">☀️</span><span class="icon-moon">🌙</span></span>
+            <span class="theme-toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="nav-auth" class="hidden md:flex items-center gap-3">
+          <a href="/login.html" class="btn-outline text-sm py-2 px-5">Login</a>
+          <a href="/login.html?register=1" class="btn-gold text-sm py-2 px-5">Sign Up</a>
+        </div>
+        <div id="nav-user" class="hidden md:flex items-center gap-3">
+          <span class="text-sm text-slate-300">Hello, <span class="user-name text-gold-gradient font-semibold"></span></span>
+          <button onclick="logout()" class="btn-outline text-sm py-2 px-5">Logout</button>
+        </div>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden text-white text-2xl">☰</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu">
+    <button id="mobile-menu-close" class="absolute top-6 right-6 text-white text-2xl">✕</button>
+    <div class="flex flex-col gap-6 mt-4">
+      <a href="/" class="nav-link text-lg">Home</a>
+      <a href="/jobs.html" class="nav-link text-lg">All Vacancies</a>
+      <a href="/contact.html" class="nav-link text-lg">Contact Us</a>
+      <div class="flex items-center justify-between pt-2 border-t border-white/10">
+        <span class="text-slate-400">Day / Night</span>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-icons"><span class="icon-sun">☀️</span><span class="icon-moon">🌙</span></span>
+            <span class="theme-toggle-thumb"></span>
+          </span>
+        </button>
+      </div>
+      <a href="/login.html" class="btn-gold text-center mt-4">Login / Sign Up</a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-section relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="fade-up">
+            <span class="inline-block px-4 py-1.5 rounded-full text-xs font-semibold bg-gold/10 text-gold border border-gold/20 mb-6 hero-badge-float">
+              🇱🇰 Sri Lanka's #1 Job Portal
+            </span>
+          </div>
+          <h1 class="fade-up stagger-1 text-4xl sm:text-5xl lg:text-6xl font-display font-extrabold leading-tight mb-6">
+            <span class="text-white">Your Gateway to</span><br>
+            <span class="text-gold-gradient">Newest Job Vacancies</span><br>
+            <span class="text-white">& Opportunities</span>
+          </h1>
+          <p class="fade-up stagger-2 text-lg text-slate-400 mb-8 max-w-lg leading-relaxed">
+            Discover thousands of career opportunities across all 25 districts of Sri Lanka. From IT to Healthcare, Remote to Internship — find your dream job today.
+          </p>
+          <div class="fade-up stagger-3 flex flex-wrap gap-4">
+            <a href="/jobs.html" class="btn-gold pulse-gold">Browse All Vacancies →</a>
+            <a href="/jobs.html?work_type=remote" class="btn-outline">🏠 Remote Jobs</a>
+          </div>
+        </div>
+        <div class="fade-right stagger-2 hidden lg:block">
+          <img src="/assets/cover.png" alt="Lanka Career Hub" class="hero-cover w-full">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="relative z-10 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="glass-card stat-card fade-up">
+          <div class="stat-number" id="stat-total">0</div>
+          <div class="text-sm text-slate-400 mt-1">Active Vacancies</div>
+        </div>
+        <div class="glass-card stat-card fade-up stagger-1">
+          <div class="stat-number" id="stat-recent">0</div>
+          <div class="text-sm text-slate-400 mt-1">Posted This Week</div>
+        </div>
+        <div class="glass-card stat-card fade-up stagger-2">
+          <div class="stat-number">25</div>
+          <div class="text-sm text-slate-400 mt-1">Districts Covered</div>
+        </div>
+        <div class="glass-card stat-card fade-up stagger-3">
+          <div class="stat-number">31</div>
+          <div class="text-sm text-slate-400 mt-1">Job Categories</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider relative z-10"></div>
+
+  <!-- Quick Search -->
+  <section class="relative z-10 py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="fade-up text-3xl font-display font-bold text-white mb-4">Find Your Perfect Job</h2>
+      <p class="fade-up stagger-1 text-slate-400 mb-8">Search by keyword, district, or category</p>
+      <form class="fade-up stagger-2 flex flex-col sm:flex-row gap-3" action="/jobs.html" method="GET">
+        <div class="relative flex-1">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">🔍</span>
+          <input type="text" name="search" class="search-input" placeholder="Job title, company, or keyword...">
+        </div>
+        <select name="district" class="filter-select sm:w-48">
+          <option value="all">All Districts</option>
+        </select>
+        <button type="submit" class="btn-gold whitespace-nowrap">Search Jobs</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Work Types -->
+  <section class="relative z-10 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap justify-center gap-3" id="home-work-types">
+        <a href="/jobs.html?work_type=remote" class="work-type-pill">🏠 Remote</a>
+        <a href="/jobs.html?work_type=work-from-home" class="work-type-pill">💻 Work From Home</a>
+        <a href="/jobs.html?work_type=online" class="work-type-pill">🌐 Online</a>
+        <a href="/jobs.html?work_type=internship" class="work-type-pill">🎓 Internship</a>
+        <a href="/jobs.html?work_type=hybrid" class="work-type-pill">🔄 Hybrid</a>
+        <a href="/jobs.html?work_type=onsite" class="work-type-pill">🏢 On-site</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider relative z-10"></div>
+
+  <!-- Latest Jobs -->
+  <section class="relative z-10 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-10">
+        <div>
+          <h2 class="fade-up text-3xl font-display font-bold text-white">Latest Vacancies</h2>
+          <p class="fade-up stagger-1 text-slate-400 mt-2">Fresh opportunities posted daily</p>
+        </div>
+        <a href="/jobs.html" class="fade-up btn-outline text-sm hidden sm:inline-block">View All →</a>
+      </div>
+      <div id="latest-jobs" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="skeleton h-48 rounded-2xl"></div>
+        <div class="skeleton h-48 rounded-2xl"></div>
+        <div class="skeleton h-48 rounded-2xl"></div>
+      </div>
+      <div class="text-center mt-8 sm:hidden">
+        <a href="/jobs.html" class="btn-gold">View All Vacancies →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider relative z-10"></div>
+
+  <!-- Categories -->
+  <section class="relative z-10 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="fade-up text-3xl font-display font-bold text-white text-center mb-4">Browse by Category</h2>
+      <p class="fade-up stagger-1 text-slate-400 text-center mb-10">31 industry categories to explore</p>
+      <div id="category-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider relative z-10"></div>
+
+  <!-- Districts -->
+  <section class="relative z-10 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="fade-up text-3xl font-display font-bold text-white text-center mb-4">Jobs by District</h2>
+      <p class="fade-up stagger-1 text-slate-400 text-center mb-10">All 25 districts of Sri Lanka</p>
+      <div id="district-grid" class="flex flex-wrap justify-center gap-2">
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative z-10 py-20">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="glass-card p-12 fade-up">
+        <h2 class="text-3xl font-display font-bold text-white mb-4">Ready to Start Your Career Journey?</h2>
+        <p class="text-slate-400 mb-8">Create a free account to save jobs, get alerts, and apply faster.</p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="/login.html?register=1" class="btn-gold">Create Free Account</a>
+          <a href="/contact.html" class="btn-outline">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <img src="/assets/logo.png" alt="Logo" class="w-10 h-10 rounded-full">
+            <span class="font-display font-bold text-white">Lanka Career Hub</span>
+          </div>
+          <p class="text-sm text-slate-400">Your Gateway to the Newest Job Vacancies & Opportunities in Sri Lanka.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white mb-4">Quick Links</h4>
+          <div class="flex flex-col gap-2 text-sm">
+            <a href="/jobs.html" class="text-slate-400 hover:text-gold transition">All Vacancies</a>
+            <a href="/jobs.html?work_type=remote" class="text-slate-400 hover:text-gold transition">Remote Jobs</a>
+            <a href="/jobs.html?work_type=internship" class="text-slate-400 hover:text-gold transition">Internships</a>
+            <a href="/contact.html" class="text-slate-400 hover:text-gold transition">Contact Us</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold text-white mb-4">Follow Us</h4>
+          <a id="footer-fb" href="#" target="_blank" class="inline-flex items-center gap-2 text-slate-400 hover:text-gold transition text-sm">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Facebook Page
+          </a>
+        </div>
+      </div>
+      <div class="text-center text-sm text-slate-500 pt-6 border-t border-white/5">
+        © 2026 Lanka Career Hub. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Job Modal -->
+  <div id="job-modal" class="modal-overlay" onclick="if(event.target===this)closeJobModal()">
+    <div class="modal-content">
+      <button onclick="closeJobModal()" class="float-right text-slate-400 hover:text-white text-2xl mb-4">✕</button>
+      <div id="job-modal-content"></div>
+    </div>
+  </div>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/app.js"></script>
+  <button type="button" id="theme-toggle-float" class="theme-toggle-floating" data-theme-toggle aria-label="Toggle day/night mode" title="Day / Night mode">☀️</button>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      loadStats();
+
+      const cfg = await loadConfig();
+
+      const districtSelect = document.querySelector('select[name="district"]');
+      cfg.districts.forEach(d => {
+        districtSelect.innerHTML += `<option value="${d}">${d}</option>`;
+      });
+
+      const catGrid = document.getElementById('category-grid');
+      cfg.categories.forEach((c, i) => {
+        catGrid.innerHTML += `
+          <a href="/jobs.html?category=${c.id}" class="category-chip fade-up" style="transition-delay:${(i % 8) * 0.05}s">
+            <span>${c.icon}</span>
+            <span class="truncate">${c.name}</span>
+          </a>
+        `;
+      });
+
+      const distGrid = document.getElementById('district-grid');
+      cfg.districts.forEach((d, i) => {
+        distGrid.innerHTML += `
+          <a href="/jobs.html?district=${d}" class="category-chip fade-up text-sm" style="transition-delay:${(i % 10) * 0.03}s">
+            📍 ${d}
+          </a>
+        `;
+      });
+
+      document.getElementById('footer-fb').href = cfg.facebookPage;
+
+      try {
+        const res = await fetch('/api/jobs?limit=6');
+        const data = await res.json();
+        document.getElementById('latest-jobs').innerHTML = data.jobs.map(j => renderJobCard(j)).join('');
+        initScrollAnimations();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>(function(){var t=localStorage.getItem('lch_theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+  <title>Contact Us — Lanka Career Hub</title>
+  <link rel="icon" href="/assets/logo.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+  <div class="animated-bg">
+    <div class="orb-wrap"><div class="orb orb-1"></div></div>
+    <div class="orb-wrap"><div class="orb orb-2"></div></div>
+    <div class="orb-wrap"><div class="orb orb-3"></div></div>
+    <canvas id="particle-canvas"></canvas>
+  </div>
+  <div class="network-bg"></div>
+
+  <nav class="navbar scrolled">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/assets/logo.png" alt="Lanka Career Hub" class="w-10 h-10 rounded-full">
+        <span class="font-display font-bold text-lg text-white hidden sm:block">Lanka Career Hub</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/jobs.html" class="nav-link">All Vacancies</a>
+        <a href="/contact.html" class="nav-link active">Contact Us</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" class="theme-toggle hidden md:block" data-theme-toggle aria-label="Toggle day/night mode" title="Day / Night mode">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-icons"><span class="icon-sun">☀️</span><span class="icon-moon">🌙</span></span>
+            <span class="theme-toggle-thumb"></span>
+          </span>
+        </button>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden text-white text-2xl">☰</button>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" class="mobile-menu">
+    <button id="mobile-menu-close" class="absolute top-6 right-6 text-white text-2xl">✕</button>
+    <div class="flex flex-col gap-6 mt-4">
+      <a href="/" class="nav-link text-lg">Home</a>
+      <a href="/jobs.html" class="nav-link text-lg">All Vacancies</a>
+      <a href="/contact.html" class="nav-link text-lg">Contact Us</a>
+      <div class="flex items-center justify-between pt-2 border-t border-white/10">
+        <span class="text-slate-400">Day / Night</span>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-icons"><span class="icon-sun">☀️</span><span class="icon-moon">🌙</span></span>
+            <span class="theme-toggle-thumb"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="relative z-10 pt-28 pb-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h1 class="fade-up text-3xl sm:text-4xl font-display font-bold text-white mb-4">Contact Us</h1>
+        <p class="fade-up stagger-1 text-slate-400 max-w-lg mx-auto">Have questions or want to post a vacancy? Get in touch with us through any of the channels below.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Contact Info -->
+        <div class="space-y-6">
+          <div class="glass-card p-6 fade-up">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl flex-shrink-0">📧</div>
+              <div>
+                <h3 class="font-semibold text-white mb-1">Email</h3>
+                <a id="contact-email" href="#" class="text-gold hover:underline"></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-6 fade-up stagger-1">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl flex-shrink-0">📱</div>
+              <div>
+                <h3 class="font-semibold text-white mb-1">Phone</h3>
+                <a id="contact-phone" href="#" class="text-gold hover:underline"></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-6 fade-up stagger-2">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-gold" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-white mb-1">Facebook Page</h3>
+                <p class="text-sm text-slate-400 mb-2">Follow us for daily job updates</p>
+                <a id="contact-fb" href="#" target="_blank" class="btn-gold text-sm inline-block">Visit Our Facebook Page →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-6 fade-up stagger-3">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-2xl flex-shrink-0">🤖</div>
+              <div>
+                <h3 class="font-semibold text-white mb-1">Job Bot</h3>
+                <p class="text-sm text-slate-400">Our automated job bot posts the latest vacancies to our Facebook page and this website daily.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="glass-card p-8 fade-right">
+          <h2 class="text-xl font-display font-bold text-white mb-6">Send us a Message</h2>
+          <form id="contact-form" class="space-y-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1">Your Name</label>
+              <input type="text" class="auth-input" placeholder="John Doe" required>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1">Email</label>
+              <input type="email" class="auth-input" placeholder="you@email.com" required>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1">Subject</label>
+              <select class="filter-select">
+                <option>General Inquiry</option>
+                <option>Post a Job Vacancy</option>
+                <option>Technical Support</option>
+                <option>Partnership</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1">Message</label>
+              <textarea class="auth-input h-32 resize-none" placeholder="Your message..." required></textarea>
+            </div>
+            <button type="submit" class="btn-gold w-full">Send Message</button>
+          </form>
+          <div id="form-sent" class="hidden text-center py-8">
+            <div class="text-4xl mb-4">✅</div>
+            <h3 class="text-lg font-bold text-white mb-2">Message Sent!</h3>
+            <p class="text-slate-400 text-sm">We'll get back to you as soon as possible.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FB Cover Banner -->
+      <div class="mt-12 fade-up">
+        <img src="/assets/cover.png" alt="Lanka Career Hub Banner" class="w-full rounded-2xl shadow-2xl">
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer relative z-10">
+    <div class="max-w-7xl mx-auto px-4 text-center text-sm text-slate-500">
+      © 2026 Lanka Career Hub. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="/js/animations.js"></script>
+  <script src="/js/app.js"></script>
+  <button type="button" id="theme-toggle-float" class="theme-toggle-floating" data-theme-toggle aria-label="Toggle day/night mode" title="Day / Night mode">☀️</button>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const cfg = await loadConfig();
+      document.getElementById('contact-email').textContent = cfg.contactEmail;
+      document.getElementById('contact-email').href = `mailto:${cfg.contactEmail}`;
+      document.getElementById('contact-phone').textContent = cfg.contactPhone;
+      document.getElementById('contact-phone').href = `tel:${cfg.contactPhone}`;
+      document.getElementById('contact-fb').href = cfg.facebookPage;
+    });
+
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('contact-form').classList.add('hidden');
+      document.getElementById('form-sent').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
