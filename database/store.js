@@ -1,76 +1,96 @@
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 
-const dataDir = path.join(__dirname, '..', 'data');
-const jobsFile = path.join(dataDir, 'jobs.json');
-const usersFile = path.join(dataDir, 'users.json');
+// MongoDB Cloud එකට Connect වීම
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => console.log('✅ MongoDB Cloud Database Connected Successfully!'))
+  .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+// --- ඩේටා සේව් වෙන විදිහ (Schemas) ---
 
-function read(file) {
-  if (!fs.existsSync(file)) return [];
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
-}
+const jobSchema = new mongoose.Schema({
+  id: String,
+  title: String,
+  company: String,
+  description: String,
+  apply_link: String,
+  fb_post_id: String,
+  district: String,
+  category: String,
+  work_type: String,
+  is_active: { type: Number, default: 1 },
+  created_at: { type: Date, default: Date.now }
+});
 
-function write(file, data) {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
-}
+const userSchema = new mongoose.Schema({
+  id: String,
+  email: String,
+  password: String,
+  name: String,
+  created_at: { type: Date, default: Date.now }
+});
 
-function nextId(items) {
-  return items.length ? Math.max(...items.map(i => i.id)) + 1 : 1;
-}
+const Job = mongoose.model('Job', jobSchema);
+const User = mongoose.model('User', userSchema);
+
+// --- ප්‍රධාන ෆන්ක්ෂන් ටික ---
 
 const store = {
-  getJobs({ district, category, work_type, search, page = 1, limit = 12, activeOnly = true } = {}) {
-    let jobs = read(jobsFile);
-    if (activeOnly) jobs = jobs.filter(j => j.is_active !== 0);
-
-    if (district && district !== 'all') jobs = jobs.filter(j => j.district === district);
-    if (category && category !== 'all') jobs = jobs.filter(j => j.category === category);
-    if (work_type && work_type !== 'all') jobs = jobs.filter(j => j.work_type === work_type);
+  async getJobs({ district, category, work_type, search, page = 1, limit = 12, activeOnly = true } = {}) {
+    let query = {};
+    if (activeOnly) query.is_active = { $ne: 0 };
+    if (district && district !== 'all') query.district = district;
+    if (category && category !== 'all') query.category = category;
+    if (work_type && work_type !== 'all') query.work_type = work_type;
+    
     if (search) {
-      const term = search.toLowerCase();
-      jobs = jobs.filter(j =>
-        j.title.toLowerCase().includes(term) ||
-        j.company.toLowerCase().includes(term) ||
-        j.description.toLowerCase().includes(term)
-      );
+      const term = new RegExp(search, 'i');
+      query.$or = [
+        { title: term },
+        { company: term },
+        { description: term }
+      ];
     }
 
-    jobs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-    const total = jobs.length;
     const offset = (page - 1) * limit;
-    return { jobs: jobs.slice(offset, offset + limit), total };
+    
+    // Cloud එකෙන් ඩේටා ගේනවා
+    const jobs = await Job.find(query)
+                          .sort({ created_at: -1 })
+                          .skip(offset)
+                          .limit(limit)
+                          .lean();
+                          
+    const total = await Job.countDocuments(query);
+    return { jobs, total };
   },
 
-  getJobById(id) {
-    return read(jobsFile).find(j => j.id === Number(id) && j.is_active !== 0) || null;
+  async getJobById(id) {
+    return await Job.findOne({ id: String(id), is_active: { $ne: 0 } }).lean();
   },
 
-  getJobByFbPostId(fbPostId) {
+  async getJobByFbPostId(fbPostId) {
     if (!fbPostId) return null;
-    return read(jobsFile).find(j => j.fb_post_id === fbPostId && j.is_active !== 0) || null;
+    return await Job.findOne({ fb_post_id: fbPostId, is_active: { $ne: 0 } }).lean();
   },
 
-  createJob(data) {
-    const jobs = read(jobsFile);
-    const job = {
-      id: nextId(jobs),
+  async createJob(data) {
+    const newJob = new Job({
+      id: Date.now().toString(), // අලුතින් ID එකක් හදනවා
       ...data,
-      is_active: 1,
-      created_at: new Date().toISOString()
-    };
-    jobs.push(job);
-    write(jobsFile, jobs);
-    return job;
+      is_active: 1
+    });
+    await newJob.save();
+    return newJob.toObject();
   },
 
-  countJobs() {
-    return read(jobsFile).length;
+  async countJobs() {
+    return await Job.countDocuments();
   },
 
-  getStats() {
-    const jobs = read(jobsFile).filter(j => j.is_active !== 0);
+  async getStats() {
+    const jobs = await Job.find({ is_active: { $ne: 0 } }).lean();
     const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
     const groupBy = (field) => {
@@ -90,22 +110,19 @@ const store = {
     };
   },
 
-  getUserByEmail(email) {
-    return read(usersFile).find(u => u.email === email) || null;
+  async getUserByEmail(email) {
+    return await User.findOne({ email }).lean();
   },
 
-  createUser({ email, password, name }) {
-    const users = read(usersFile);
-    const user = {
-      id: nextId(users),
+  async createUser({ email, password, name }) {
+    const newUser = new User({
+      id: Date.now().toString(),
       email,
       password,
-      name,
-      created_at: new Date().toISOString()
-    };
-    users.push(user);
-    write(usersFile, users);
-    return user;
+      name
+    });
+    await newUser.save();
+    return newUser.toObject();
   }
 };
 
