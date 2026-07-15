@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 
 // MongoDB Cloud එකට Connect වීම
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('✅ MongoDB Cloud Database Connected Successfully!'))
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('✅ MongoDB Cloud Database Connected Successfully!'))
   .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 // --- ඩේටා සේව් වෙන විදිහ (Schemas) ---
