@@ -54,7 +54,7 @@ app.get('/api/stats', async (req, res) => {
     const stats = await store.getStats();
     res.json(stats);
   } catch (error) {
-    res.status(500).json({ error: 'Server error fetching stats' });
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
@@ -67,7 +67,7 @@ app.get('/api/jobs', async (req, res) => {
     });
     res.json({ jobs, total, page: Number(page), pages: Math.ceil(total / Number(limit)) });
   } catch (error) {
-    res.status(500).json({ error: 'Server error fetching jobs' });
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
@@ -77,7 +77,7 @@ app.get('/api/jobs/:id', async (req, res) => {
     if (!job) return res.status(404).json({ error: 'Job not found' });
     res.json(job);
   } catch (error) {
-    res.status(500).json({ error: 'Server error fetching job' });
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
@@ -86,7 +86,7 @@ app.get('/api/health', async (req, res) => {
     const count = await store.countJobs();
     res.json({ ok: true, service: 'Lanka Career Hub', jobs: count });
   } catch (error) {
-    res.status(500).json({ error: 'Database connection error' });
+    res.status(500).json({ error: 'Database connection error', details: error.message });
   }
 });
 
@@ -121,27 +121,17 @@ app.post('/api/webhook/jobs', botAuth, async (req, res) => {
       warnings: normalized.warnings.length ? normalized.warnings : undefined
     });
   } catch (error) {
-    res.status(500).json({ error: 'Server error saving job' });
+    console.error("🔴 DATABASE ERROR:", error);
+    // මෙන්න මේ කෑල්ලෙන් තමයි අපි ඇත්තම ලෙඩේ අල්ලගන්නේ!
+    res.status(500).json({ error: 'Server error saving job', details: error.message, full_error: String(error) });
   }
 });
 
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { email, password, name } = req.body;
-    if (!email || !password || !name) {
-      return res.status(400).json({ error: 'Email, password, and name are required' });
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(400).json({ error: 'Invalid email address' });
-    }
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters' });
-    }
-
-    const existingUser = await store.getUserByEmail(email);
-    if (existingUser) {
-      return res.status(409).json({ error: 'Email already registered' });
-    }
+    if (!email || !password || !name) return res.status(400).json({ error: 'Required fields missing' });
+    if (store.getUserByEmail(email)) return res.status(409).json({ error: 'Email already registered' });
 
     const hash = bcrypt.hashSync(password, 10);
     const user = await store.createUser({ email, password: hash, name });
@@ -149,17 +139,13 @@ app.post('/api/auth/register', async (req, res) => {
 
     res.status(201).json({ token, user: { id: user.id, email, name } });
   } catch (error) {
-    res.status(500).json({ error: 'Server error during registration' });
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
-    }
-
     const user = await store.getUserByEmail(email);
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ error: 'Invalid email or password' });
@@ -168,7 +154,7 @@ app.post('/api/auth/login', async (req, res) => {
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
   } catch (error) {
-    res.status(500).json({ error: 'Server error during login' });
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
 
